@@ -1,5 +1,7 @@
 # Architecture
 
+> **Note:** [PROJECT.md](../PROJECT.md) is the source of truth. This file provides supplementary detail.
+
 ## System Context
 
 Deluxe is a multi-service application that provides Git-based code hosting with a web interface.

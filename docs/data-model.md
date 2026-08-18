@@ -1,6 +1,8 @@
 # Data Model
 
-See the planning document for full entity definitions. Summary:
+> **Note:** [PROJECT.md](../PROJECT.md) §7 is the source of truth. Executable schema lives in `db/migrations/`.
+
+Summary:
 
 ## Core Entities
 

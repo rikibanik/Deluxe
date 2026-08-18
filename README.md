@@ -2,6 +2,8 @@
 
 A GitHub-like platform for storing, versioning, and browsing code.
 
+> **Source of truth:** [PROJECT.md](PROJECT.md) — requirements, architecture, data model, and scope.
+
 ## Monorepo Layout
 
 ```
@@ -40,4 +42,4 @@ make dev
 - Git push, pull, clone via HTTPS + personal access token
 - Web file browser with syntax highlighting
 
-See [docs/project-structure.md](docs/project-structure.md) for the full breakdown.
+See [PROJECT.md](PROJECT.md) for the full specification and [docs/project-structure.md](docs/project-structure.md) for code layout details.

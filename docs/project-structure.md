@@ -1,5 +1,7 @@
 # Project Structure
 
+> **Note:** [PROJECT.md](../PROJECT.md) §10 is the source of truth for structure and scope.
+
 ## Overview
 
 Deluxe is a **monorepo** with three deployable applications and shared infrastructure config. Git objects live on the filesystem; metadata lives in PostgreSQL.
