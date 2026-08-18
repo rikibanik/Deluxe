@@ -10,9 +10,9 @@ A GitHub-like platform for storing, versioning, and browsing code.
 ```
 .
 ├── apps/
-│   ├── api/          # REST API: auth, users, repo metadata
-│   ├── git-http/     # Git smart HTTP: clone, push, pull
-│   └── web/          # Web UI: browse repos, view files
+│   ├── api/          # Express.js REST API: auth, users, repo metadata
+│   ├── git-http/     # Express.js Git smart HTTP: clone, push, pull
+│   └── web/          # Next.js UI: browse repos, view files
 ├── db/
 │   └── migrations/   # PostgreSQL schema migrations
 ├── docs/             # Architecture and design docs
@@ -21,13 +21,27 @@ A GitHub-like platform for storing, versioning, and browsing code.
     └── repos/        # Bare Git repositories (runtime, gitignored)
 ```
 
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| API | Node.js 20+, Express 4, JavaScript |
+| Git HTTP | Node.js 20+, Express 4, JavaScript |
+| Web | Next.js 15, React 19, TypeScript |
+| Database | PostgreSQL 16 |
+
 ## Quick Start
 
 ```bash
 cp .env.example .env
+npm install
 docker compose up -d postgres
 make migrate
-make dev
+
+# Start each service (separate terminals)
+npm run dev:api
+npm run dev:git-http
+npm run dev:web
 ```
 
 | Service   | URL                      |

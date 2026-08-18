@@ -1,13 +1,16 @@
-FROM golang:1.22-alpine AS builder
-WORKDIR /src
-COPY apps/git-http/go.mod apps/git-http/go.sum* ./
-RUN go mod download 2>/dev/null || true
-COPY apps/git-http/ ./
-RUN CGO_ENABLED=0 go build -o /git-http ./cmd/server
-
-FROM alpine:3.20
-RUN apk add --no-cache ca-certificates git
+FROM node:22-alpine AS deps
 WORKDIR /app
-COPY --from=builder /git-http .
+COPY package.json ./
+COPY apps/git-http/package.json ./apps/git-http/
+RUN npm install --workspace=@deluxe/git-http --omit=dev
+
+FROM node:22-alpine
+RUN apk add --no-cache git
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json ./
+COPY apps/git-http/package.json ./apps/git-http/
+COPY apps/git-http/src ./apps/git-http/src
+ENV NODE_ENV=production
 EXPOSE 8080
-CMD ["./git-http"]
+CMD ["node", "apps/git-http/src/index.js"]

@@ -4,7 +4,7 @@
 > This file breaks the entire project into sequenced milestones with deliverables and acceptance criteria.
 > When scope changes, update PROJECT.md first, then adjust milestones here.
 
-**Last updated:** 2026-08-18
+**Last updated:** 2026-08-18 (backend stack: Express.js / JavaScript)
 
 ---
 
@@ -91,7 +91,7 @@ flowchart TD
 ### Acceptance Criteria
 
 - [x] `make migrate` applies all migrations against local Postgres
-- [x] `go build ./...` succeeds for both Go services
+- [x] `npm install` succeeds for all workspaces
 - [x] Health endpoints respond on api and git-http
 - [x] `docker compose up postgres` starts database
 
@@ -114,17 +114,17 @@ Infrastructure only — enables all subsequent milestones.
 | # | Item | Package / file |
 |---|------|----------------|
 | 1.1 | PostgreSQL connection pool | `internal/db/` |
-| 1.2 | User repository (CRUD) | `internal/repository/user_repo.go` |
-| 1.3 | Session repository | `internal/repository/session_repo.go` |
-| 1.4 | Password hashing (bcrypt/argon2) | `internal/auth/password.go` |
-| 1.5 | Session token generation + hashing | `internal/auth/session.go` |
-| 1.6 | `POST /auth/register` | `internal/handler/auth_handler.go` |
-| 1.7 | `POST /auth/login` | `internal/handler/auth_handler.go` |
-| 1.8 | `POST /auth/logout` | `internal/handler/auth_handler.go` |
-| 1.9 | `GET /users/me` | `internal/handler/user_handler.go` |
-| 1.10 | Session auth middleware | `internal/middleware/auth.go` |
-| 1.11 | CORS + logging middleware | `internal/middleware/` |
-| 1.12 | Input validation (username, email, password) | `internal/service/auth_service.go` |
+| 1.2 | User repository (CRUD) | `src/repositories/userRepository.js` |
+| 1.3 | Session repository | `src/repositories/sessionRepository.js` |
+| 1.4 | Password hashing (bcrypt) | `src/auth/password.js` |
+| 1.5 | Session token generation + hashing | `src/auth/session.js` |
+| 1.6 | `POST /auth/register` | `src/routes/auth.js` |
+| 1.7 | `POST /auth/login` | `src/routes/auth.js` |
+| 1.8 | `POST /auth/logout` | `src/routes/auth.js` |
+| 1.9 | `GET /users/me` | `src/routes/users.js` |
+| 1.10 | Session auth middleware | `src/middleware/auth.js` |
+| 1.11 | CORS + logging middleware | `src/middleware/` |
+| 1.12 | Input validation (username, email, password) | `src/services/authService.js` |
 
 ### Acceptance Criteria
 
@@ -159,13 +159,13 @@ Auth API fully testable via `curl` or HTTP client without UI.
 
 | # | Item | Package / file |
 |---|------|----------------|
-| 2.1 | PAT repository | `internal/repository/token_repo.go` |
-| 2.2 | PAT generation (`pat_<random>`) + SHA-256 hash | `internal/auth/pat.go` |
-| 2.3 | `GET /users/me/tokens` | `internal/handler/token_handler.go` |
-| 2.4 | `POST /users/me/tokens` | `internal/handler/token_handler.go` |
-| 2.5 | `DELETE /users/me/tokens/:id` | `internal/handler/token_handler.go` |
-| 2.6 | PAT auth middleware (for API routes) | `internal/middleware/auth.go` |
-| 2.7 | Scope validation (`repo_read`, `repo_write`, `api`) | `internal/auth/pat.go` |
+| 2.1 | PAT repository | `src/repositories/tokenRepository.js` |
+| 2.2 | PAT generation (`pat_<random>`) + SHA-256 hash | `src/auth/pat.js` |
+| 2.3 | `GET /users/me/tokens` | `src/routes/users.js` |
+| 2.4 | `POST /users/me/tokens` | `src/routes/users.js` |
+| 2.5 | `DELETE /users/me/tokens/:id` | `src/routes/users.js` |
+| 2.6 | PAT auth middleware (for API routes) | `src/middleware/auth.js` |
+| 2.7 | Scope validation (`repo_read`, `repo_write`, `api`) | `src/auth/pat.js` |
 
 ### Acceptance Criteria
 
@@ -198,16 +198,16 @@ PAT lifecycle testable via API; token ready for git-http integration in M4.
 
 | # | Item | Package / file |
 |---|------|----------------|
-| 3.1 | Repository repository (data access) | `internal/repository/repo_repo.go` |
-| 3.2 | Repo service (create, delete, list, get) | `internal/service/repo_service.go` |
+| 3.1 | Repository repository (data access) | `src/repositories/repoRepository.js` |
+| 3.2 | Repo service (create, delete, list, get) | `src/services/repoService.js` |
 | 3.3 | Bare repo initialization | `scripts/init-repo.sh` + service call |
-| 3.4 | `GET /repos` (owner's repos) | `internal/handler/repo_handler.go` |
-| 3.5 | `POST /repos` | `internal/handler/repo_handler.go` |
-| 3.6 | `GET /repos/:owner/:name` | `internal/handler/repo_handler.go` |
-| 3.7 | `DELETE /repos/:owner/:name` (soft delete) | `internal/handler/repo_handler.go` |
-| 3.8 | Visibility enforcement (public/private) | `internal/service/repo_service.go` |
-| 3.9 | Private repo → 404 for non-owner | `internal/middleware/` + service |
-| 3.10 | Reserved name + format validation | `internal/service/repo_service.go` |
+| 3.4 | `GET /repos` (owner's repos) | `src/routes/repos.js` |
+| 3.5 | `POST /repos` | `src/routes/repos.js` |
+| 3.6 | `GET /repos/:owner/:name` | `src/routes/repos.js` |
+| 3.7 | `DELETE /repos/:owner/:name` (soft delete) | `src/routes/repos.js` |
+| 3.8 | Visibility enforcement (public/private) | `src/services/repoService.js` |
+| 3.9 | Private repo → 404 for non-owner | `src/middleware/` + service |
+| 3.10 | Reserved name + format validation | `src/services/repoService.js` |
 
 ### Acceptance Criteria
 
@@ -243,17 +243,17 @@ Repos exist in DB and on disk; ready for Git operations in M4.
 
 | # | Item | Package / file |
 |---|------|----------------|
-| 4.1 | Route `/{owner}/{repo}.git` | `internal/protocol/router.go` |
-| 4.2 | `info/refs?service=git-upload-pack` | `internal/protocol/upload_pack.go` |
-| 4.3 | `POST /git-upload-pack` | `internal/protocol/upload_pack.go` |
-| 4.4 | `info/refs?service=git-receive-pack` | `internal/protocol/receive_pack.go` |
-| 4.5 | `POST /git-receive-pack` | `internal/protocol/receive_pack.go` |
-| 4.6 | PAT validation + repo ACL | `internal/auth/pat.go` |
-| 4.7 | `repo_read` scope for clone/pull | `internal/auth/pat.go` |
-| 4.8 | `repo_write` scope for push | `internal/auth/pat.go` |
-| 4.9 | Post-receive hook | `internal/hook/post_receive.go` |
-| 4.10 | Metadata sync (`pushed_at`, `size_bytes`, `is_empty`) | `internal/hook/post_receive.go` |
-| 4.11 | Size limit enforcement (repo + file) | `internal/protocol/receive_pack.go` |
+| 4.1 | Route `/{owner}/{repo}.git` | `src/protocol/router.js` |
+| 4.2 | `info/refs?service=git-upload-pack` | `src/protocol/uploadPack.js` |
+| 4.3 | `POST /git-upload-pack` | `src/protocol/uploadPack.js` |
+| 4.4 | `info/refs?service=git-receive-pack` | `src/protocol/receivePack.js` |
+| 4.5 | `POST /git-receive-pack` | `src/protocol/receivePack.js` |
+| 4.6 | PAT validation + repo ACL | `src/auth/pat.js` |
+| 4.7 | `repo_read` scope for clone/pull | `src/auth/pat.js` |
+| 4.8 | `repo_write` scope for push | `src/auth/pat.js` |
+| 4.9 | Post-receive hook | `src/hook/postReceive.js` |
+| 4.10 | Metadata sync (`pushed_at`, `size_bytes`, `is_empty`) | `src/hook/postReceive.js` |
+| 4.11 | Size limit enforcement (repo + file) | `src/protocol/receivePack.js` |
 
 ### Acceptance Criteria
 
@@ -290,17 +290,17 @@ End-to-end: register → create repo → create PAT → `git clone` / `git push`
 
 | # | Item | Package / file |
 |---|------|----------------|
-| 5.1 | Bare repo reader | `internal/gitstore/bare_repo.go` |
-| 5.2 | Tree walker | `internal/gitstore/tree.go` |
-| 5.3 | Blob reader | `internal/gitstore/blob.go` |
-| 5.4 | Commit log reader | `internal/gitstore/commits.go` |
-| 5.5 | `GET /repos/:owner/:name/tree?ref=&path=` | `internal/handler/repo_handler.go` |
-| 5.6 | `GET /repos/:owner/:name/blob?ref=&path=` | `internal/handler/repo_handler.go` |
-| 5.7 | `GET /repos/:owner/:name/commits?ref=` | `internal/handler/repo_handler.go` |
-| 5.8 | Path traversal protection | `internal/gitstore/` + handler |
-| 5.9 | Large file truncation / size check | `internal/gitstore/blob.go` |
-| 5.10 | Language detection for syntax highlight hint | `internal/gitstore/blob.go` |
-| 5.11 | Branch list endpoint | `internal/handler/repo_handler.go` |
+| 5.1 | Bare repo reader | `src/gitstore/bareRepo.js` |
+| 5.2 | Tree walker | `src/gitstore/tree.js` |
+| 5.3 | Blob reader | `src/gitstore/blob.js` |
+| 5.4 | Commit log reader | `src/gitstore/commits.js` |
+| 5.5 | `GET /repos/:owner/:name/tree?ref=&path=` | `src/routes/repos.js` |
+| 5.6 | `GET /repos/:owner/:name/blob?ref=&path=` | `src/routes/repos.js` |
+| 5.7 | `GET /repos/:owner/:name/commits?ref=` | `src/routes/repos.js` |
+| 5.8 | Path traversal protection | `src/gitstore/` + routes |
+| 5.9 | Large file truncation / size check | `src/gitstore/blob.js` |
+| 5.10 | Language detection for syntax highlight hint | `src/gitstore/blob.js` |
+| 5.11 | Branch list endpoint | `src/routes/repos.js` |
 
 ### Acceptance Criteria
 
@@ -425,7 +425,7 @@ MVP success criteria #5 met: user browses code in browser after pushing via Git.
 
 | # | Item | Location |
 |---|------|----------|
-| 8.1 | Rate limiting on auth endpoints | `api/internal/middleware/ratelimit.go` |
+| 8.1 | Rate limiting on auth endpoints | `apps/api/src/middleware/rateLimit.js` |
 | 8.2 | Structured logging (request ID, user) | both services |
 | 8.3 | Session cleanup job | `scripts/cleanup-sessions.sh` or worker |
 | 8.4 | Token cleanup job | `scripts/cleanup-tokens.sh` |

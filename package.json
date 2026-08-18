@@ -1,0 +1,23 @@
+{
+  "name": "deluxe",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/git-http",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "./scripts/dev.sh",
+    "dev:api": "npm run dev -w @deluxe/api",
+    "dev:git-http": "npm run dev -w @deluxe/git-http",
+    "dev:web": "npm run dev -w @deluxe/web",
+    "start:api": "npm run start -w @deluxe/api",
+    "start:git-http": "npm run start -w @deluxe/git-http",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

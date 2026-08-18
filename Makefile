@@ -1,4 +1,7 @@
-.PHONY: dev up down migrate migrate-down test lint
+.PHONY: dev up down migrate migrate-down test lint install
+
+install:
+	npm install
 
 dev:
 	./scripts/dev.sh
@@ -16,10 +19,7 @@ migrate-down:
 	./scripts/migrate.sh down
 
 test:
-	cd apps/api && go test ./...
-	cd apps/git-http && go test ./...
-	cd apps/web && npm test
+	npm test
 
 lint:
-	cd apps/api && go vet ./...
-	cd apps/git-http && go vet ./...
+	npm run lint
