@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build output
+dist/
+build/
+bin/
+*.exe
+*.out
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test / coverage
+coverage/
+*.test
+.nyc_output/
+
+# Git storage (bare repos — runtime data)
+storage/repos/*
+!storage/repos/.gitkeep
+
+# Temp
+tmp/
+.cache/
+
+# Go
+*.sum
+
+# Next.js
+apps/web/.next/
+apps/web/out/

@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: codehost
+      POSTGRES_PASSWORD: codehost
+      POSTGRES_DB: codehost
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codehost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgres://codehost:codehost@postgres:5432/codehost?sslmode=disable
+      JWT_SECRET: dev-secret-change-in-production
+      REPO_STORAGE_PATH: /data/repos
+    volumes:
+      - repo_storage:/data/repos
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  git-http:
+    build:
+      context: .
+      dockerfile: apps/git-http/Dockerfile
+    ports:
+      - "9418:8080"
+    environment:
+      DATABASE_URL: postgres://codehost:codehost@postgres:5432/codehost?sslmode=disable
+      REPO_STORAGE_PATH: /data/repos
+      API_INTERNAL_URL: http://api:8080
+    volumes:
+      - repo_storage:/data/repos
+    depends_on:
+      - api
+      - postgres
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  repo_storage:
