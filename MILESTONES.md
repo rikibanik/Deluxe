@@ -344,12 +344,12 @@ All read endpoints testable via API against a repo with pushed content.
 | 6.1 | App layout (header, nav, auth guard) | `src/components/layout/` |
 | 6.2 | Register page + form validation | `src/app/register/` |
 | 6.3 | Login page | `src/app/login/` |
-| 6.4 | Logout action | `src/lib/auth.ts` |
-| 6.5 | API client with credentials | `src/lib/api.ts` |
-| 6.6 | Dashboard — repo list | `src/app/page.tsx` |
-| 6.7 | Create repo modal/form | `src/components/repo/CreateRepoForm.tsx` |
-| 6.8 | PAT settings page | `src/app/settings/tokens/` |
-| 6.9 | Create / revoke PAT UI | `src/components/auth/TokenManager.tsx` |
+| 6.4 | Logout action | `src/lib/auth.js` |
+| 6.5 | API client with credentials | `src/lib/api.js` |
+| 6.6 | Dashboard — repo list | `src/app/page.jsx` |
+| 6.7 | Create repo modal/form | `src/components/repo/CreateRepoForm.jsx` |
+| 6.8 | PAT settings page | `src/app/settings/tokens/page.jsx` |
+| 6.9 | Create / revoke PAT UI | `src/components/auth/TokenManager.jsx` |
 | 6.10 | Error and loading states | `src/components/ui/` |
 
 ### Acceptance Criteria
