@@ -10,7 +10,7 @@ Deluxe is a multi-service application that provides Git-based code hosting with 
 
 | Service | Port | Stack | Responsibility |
 |---------|------|-------|----------------|
-| **web** | 3000 | Next.js, React, TypeScript | UI |
+| **web** | 3000 | Next.js, React, JavaScript | UI |
 | **api** | 8080 | Node.js, Express, JavaScript | REST API, sessions, metadata |
 | **git-http** | 9418 | Node.js, Express, JavaScript | Git smart HTTP protocol |
 | **postgres** | 5432 | PostgreSQL 16 | Metadata persistence |

@@ -27,7 +27,7 @@ A GitHub-like platform for storing, versioning, and browsing code.
 |-------|------------|
 | API | Node.js 20+, Express 4, JavaScript |
 | Git HTTP | Node.js 20+, Express 4, JavaScript |
-| Web | Next.js 15, React 19, TypeScript |
+| Web | Next.js 15, React 19, JavaScript |
 | Database | PostgreSQL 16 |
 
 ## Quick Start

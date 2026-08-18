@@ -4,7 +4,7 @@
 
 ## Overview
 
-Deluxe is a **monorepo** with three deployable applications and shared infrastructure config. Git objects live on the filesystem; metadata lives in PostgreSQL. Backend services use **Express.js (JavaScript)**.
+Deluxe is a **monorepo** with three deployable applications and shared infrastructure config. Git objects live on the filesystem; metadata lives in PostgreSQL. **All application code is JavaScript** (Node.js) — Go is not used.
 
 ```
 deluxe/
@@ -117,42 +117,40 @@ Auth header: `Authorization: Bearer pat_xxx` or Git credential helper.
 
 ---
 
-## `apps/web` — Frontend
+## `apps/web` — Frontend (JavaScript)
 
-Next.js App Router UI for auth, dashboard, and code browsing.
+Next.js App Router UI for auth, dashboard, and code browsing. All source files are **JavaScript** (`.js` / `.jsx`).
 
 ```
 apps/web/
 ├── src/
 │   ├── app/                    # Next.js routes
-│   │   ├── layout.tsx
-│   │   ├── page.tsx            # Landing / dashboard
+│   │   ├── layout.jsx
+│   │   ├── page.jsx            # Landing / dashboard
 │   │   ├── login/
 │   │   ├── register/
 │   │   ├── settings/
 │   │   │   └── tokens/
 │   │   └── [owner]/
 │   │       └── [repo]/
-│   │           ├── page.tsx    # Repo home (README)
+│   │           ├── page.jsx    # Repo home (README)
 │   │           ├── tree/       # File browser
 │   │           └── commits/    # Commit list
 │   ├── components/
 │   │   ├── auth/
 │   │   ├── layout/
 │   │   ├── repo/
-│   │   │   ├── FileTree.tsx
-│   │   │   ├── FileViewer.tsx
-│   │   │   └── CommitList.tsx
+│   │   │   ├── FileTree.jsx
+│   │   │   ├── FileViewer.jsx
+│   │   │   └── CommitList.jsx
 │   │   └── ui/                 # Shared primitives (Button, Input, etc.)
-│   ├── lib/
-│   │   ├── api.ts              # API client
-│   │   └── auth.ts             # Session helpers
-│   └── types/
-│       └── index.ts            # Shared TypeScript types
+│   └── lib/
+│       ├── api.js              # API client
+│       └── auth.js             # Session helpers
 ├── public/
 ├── package.json
-├── tsconfig.json
-├── next.config.ts
+├── jsconfig.json
+├── next.config.mjs
 └── Dockerfile
 ```
 

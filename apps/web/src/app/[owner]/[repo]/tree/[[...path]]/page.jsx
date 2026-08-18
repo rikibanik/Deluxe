@@ -1,8 +1,4 @@
-type RepoTreePageProps = {
-  params: Promise<{ owner: string; repo: string }>;
-};
-
-export default async function RepoTreePage({ params }: RepoTreePageProps) {
+export default async function RepoTreePage({ params }) {
   const { owner, repo } = await params;
 
   return (

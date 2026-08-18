@@ -1,8 +1,4 @@
-type RepoCommitsPageProps = {
-  params: Promise<{ owner: string; repo: string }>;
-};
-
-export default async function RepoCommitsPage({ params }: RepoCommitsPageProps) {
+export default async function RepoCommitsPage({ params }) {
   const { owner, repo } = await params;
 
   return (

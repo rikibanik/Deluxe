@@ -1,8 +1,4 @@
-type RepoPageProps = {
-  params: Promise<{ owner: string; repo: string }>;
-};
-
-export default async function RepoPage({ params }: RepoPageProps) {
+export default async function RepoPage({ params }) {
   const { owner, repo } = await params;
 
   return (
