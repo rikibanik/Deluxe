@@ -128,14 +128,18 @@ Infrastructure only — enables all subsequent milestones.
 
 ### Acceptance Criteria
 
-- [ ] Register with username, email, password → user created with `status=active`
-- [ ] Duplicate username or email → 409
-- [ ] Login with valid credentials → session cookie set (HTTP-only, Secure in prod)
-- [ ] Login with invalid credentials → 401, generic error message
-- [ ] `GET /users/me` with valid session → user profile returned
-- [ ] `GET /users/me` without session → 401
-- [ ] Logout revokes session; subsequent requests → 401
-- [ ] Password stored as hash only (NFR-01)
+- [x] Register with username, email, password → user created with `status=active`
+- [x] Duplicate username or email → 409
+- [x] Login with valid credentials → session cookie set (HTTP-only, Secure in prod)
+- [x] Login with invalid credentials → 401, generic error message
+- [x] `GET /users/me` with valid session → user profile returned
+- [x] `GET /users/me` without session → 401
+- [x] Logout revokes session; subsequent requests → 401
+- [x] Password stored as hash only (NFR-01)
+
+### Status
+
+**Done**
 
 ### Requirements Mapped
 
