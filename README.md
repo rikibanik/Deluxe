@@ -3,6 +3,7 @@
 A GitHub-like platform for storing, versioning, and browsing code.
 
 > **Source of truth:** [PROJECT.md](PROJECT.md) — requirements, architecture, data model, and scope.
+> **Delivery plan:** [MILESTONES.md](MILESTONES.md) — sequenced milestones and acceptance criteria.
 
 ## Monorepo Layout
 

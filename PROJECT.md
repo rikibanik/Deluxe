@@ -7,6 +7,7 @@
 | Document | Role |
 |----------|------|
 | **PROJECT.md** (this file) | Product, requirements, architecture, data model, scope |
+| **MILESTONES.md** | Sequenced delivery plan with acceptance criteria |
 | `db/migrations/` | Executable schema (must stay in sync with §7) |
 | `docs/` | Supplementary deep-dives (must not contradict this file) |
 | `README.md` | Quick start and onboarding pointer |
@@ -31,6 +32,8 @@
 12. [Data Lifecycle](#12-data-lifecycle)
 13. [Open Decisions](#13-open-decisions)
 14. [Out of Scope](#14-out-of-scope)
+
+**Delivery plan:** [MILESTONES.md](MILESTONES.md)
 
 ---
 
