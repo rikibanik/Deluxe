@@ -1,8 +1,10 @@
 import { Router } from 'express';
+import authRoutes from './auth.js';
+import userRoutes from './users.js';
 
 const router = Router();
 
-// TODO (M1): mount auth and user routes
-// TODO (M3): mount repo routes
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 
 export default router;
