@@ -4,14 +4,15 @@
 
 ## Overview
 
-Deluxe is a **monorepo** with three deployable applications and shared infrastructure config. Git objects live on the filesystem; metadata lives in PostgreSQL.
+Deluxe is a **monorepo** with three deployable applications and shared infrastructure config. Git objects live on the filesystem; metadata lives in PostgreSQL. Backend services use **Express.js (JavaScript)**.
 
 ```
 deluxe/
+├── package.json                # npm workspaces root
 ├── apps/
-│   ├── api/                    # REST API service
-│   ├── git-http/               # Git protocol service
-│   └── web/                    # Frontend SPA
+│   ├── api/                    # Express REST API
+│   ├── git-http/               # Express Git protocol service
+│   └── web/                    # Next.js frontend
 ├── db/migrations/              # SQL migrations (source of truth for schema)
 ├── docs/                       # Design documentation
 ├── scripts/                    # Local dev helpers
@@ -23,52 +24,45 @@ deluxe/
 
 ---
 
-## `apps/api` — REST API
+## `apps/api` — REST API (Express.js)
 
 Handles authentication, authorization, and repository metadata. Does **not** serve Git pack files.
 
 ```
 apps/api/
-├── cmd/
-│   └── server/
-│       └── main.go             # Entry point
-├── internal/
-│   ├── auth/                   # JWT, sessions, PAT validation
-│   │   ├── jwt.go
-│   │   ├── password.go
-│   │   └── pat.go
+├── src/
+│   ├── index.js                # Entry point, Express app setup
+│   ├── auth/
+│   │   ├── password.js         # bcrypt hashing
+│   │   ├── session.js          # Session token generation
+│   │   └── pat.js              # PAT generation + validation
 │   ├── config/
-│   │   └── config.go           # Env-based configuration
+│   │   └── index.js            # Env-based configuration
 │   ├── db/
-│   │   ├── postgres.go         # Connection pool
-│   │   └── queries/            # sqlc or raw query files
-│   ├── handler/                # HTTP handlers (thin)
-│   │   ├── auth_handler.go
-│   │   ├── user_handler.go
-│   │   └── repo_handler.go
+│   │   └── postgres.js         # pg connection pool
+│   ├── routes/
+│   │   ├── index.js            # Route aggregator
+│   │   ├── auth.js             # /auth/*
+│   │   ├── users.js            # /users/*
+│   │   └── repos.js            # /repos/*
 │   ├── middleware/
-│   │   ├── auth.go             # Session / PAT middleware
-│   │   ├── cors.go
-│   │   └── logging.go
-│   ├── model/                  # Domain structs (DB row mapping)
-│   │   ├── user.go
-│   │   ├── session.go
-│   │   ├── repository.go
-│   │   └── token.go
-│   ├── repository/             # Data access layer
-│   │   ├── user_repo.go
-│   │   ├── session_repo.go
-│   │   └── repo_repo.go
-│   ├── service/                # Business logic
-│   │   ├── auth_service.go
-│   │   ├── user_service.go
-│   │   ├── repo_service.go
-│   │   └── git_read_service.go # Read trees/commits from bare repos
-│   └── gitstore/               # Filesystem Git operations (read-only for API)
-│       ├── bare_repo.go
-│       └── tree.go
-├── go.mod
-├── go.sum
+│   │   ├── auth.js             # Session / PAT middleware
+│   │   ├── cors.js
+│   │   └── logging.js
+│   ├── models/
+│   │   └── index.js            # JSDoc type definitions
+│   ├── repositories/
+│   │   ├── userRepository.js
+│   │   ├── sessionRepository.js
+│   │   └── repoRepository.js
+│   ├── services/
+│   │   ├── authService.js
+│   │   ├── userService.js
+│   │   └── repoService.js
+│   └── gitstore/
+│       ├── bareRepo.js
+│       └── tree.js
+├── package.json
 └── Dockerfile
 ```
 
@@ -89,28 +83,27 @@ apps/api/
 
 ---
 
-## `apps/git-http` — Git Smart HTTP
+## `apps/git-http` — Git Smart HTTP (Express.js)
 
 Implements `git-upload-pack` (clone/pull) and `git-receive-pack` (push). Authenticates via PAT on every request.
 
 ```
 apps/git-http/
-├── cmd/
-│   └── server/
-│       └── main.go
-├── internal/
+├── src/
+│   ├── index.js                # Entry point
 │   ├── auth/
-│   │   └── pat.go              # Validate PAT + check repo ACL
+│   │   └── pat.js              # Validate PAT + check repo ACL
 │   ├── config/
-│   │   └── config.go
+│   │   └── index.js
+│   ├── db/
+│   │   └── postgres.js
 │   ├── hook/
-│   │   └── post_receive.go     # Update repo metadata after push
+│   │   └── postReceive.js      # Update repo metadata after push
 │   └── protocol/
-│       ├── router.go           # Route /:owner/:repo.git
-│       ├── upload_pack.go      # clone / pull
-│       └── receive_pack.go     # push
-├── go.mod
-├── go.sum
+│       ├── router.js           # Route /:owner/:repo.git
+│       ├── uploadPack.js       # clone / pull
+│       └── receivePack.js      # push
+├── package.json
 └── Dockerfile
 ```
 
@@ -194,8 +187,8 @@ Not committed to git. Mounted as a Docker volume in production.
 
 | Script | Purpose |
 |--------|---------|
-| `dev.sh` | Start all services locally |
-| `migrate.sh` | Run goose/golang-migrate against DATABASE_URL |
+| `dev.sh` | Print dev startup instructions |
+| `migrate.sh` | Run SQL migrations against DATABASE_URL |
 | `init-repo.sh` | Create bare repo on filesystem after DB insert |
 
 ---
@@ -205,8 +198,8 @@ Not committed to git. Mounted as a Docker volume in production.
 ### Authentication flow
 
 ```
-Browser ──session cookie──▶ API
-Git CLI ──PAT header───────▶ git-http ──▶ DB (validate token + ACL)
+Browser ──session cookie──▶ API (Express)
+Git CLI ──PAT header───────▶ git-http (Express) ──▶ DB (validate token + ACL)
 ```
 
 ### Push flow
@@ -218,16 +211,18 @@ git push ─▶ git-http ─▶ receive-pack ─▶ storage/repos/{id}.git
 
 ### Shared packages (future)
 
-If `api` and `git-http` share Go code (models, auth), extract to:
+If `api` and `git-http` share code (models, auth, db), extract to:
 
 ```
-packages/go/
-└── shared/
-    ├── model/
-    └── auth/
+packages/shared/
+├── package.json
+└── src/
+    ├── auth/
+    ├── db/
+    └── models/
 ```
 
-For MVP, duplicate minimally or use a Go workspace (`go.work`).
+For MVP, duplicate minimally or import from `packages/shared` via npm workspaces.
 
 ---
 

@@ -7,7 +7,6 @@ dist/
 build/
 bin/
 *.exe
-*.out
 
 # Environment
 .env
@@ -27,10 +26,10 @@ Thumbs.db
 # Logs
 *.log
 logs/
+npm-debug.log*
 
 # Test / coverage
 coverage/
-*.test
 .nyc_output/
 
 # Git storage (bare repos — runtime data)
@@ -40,9 +39,6 @@ storage/repos/*
 # Temp
 tmp/
 .cache/
-
-# Go
-*.sum
 
 # Next.js
 apps/web/.next/

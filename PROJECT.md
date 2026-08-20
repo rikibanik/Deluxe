@@ -7,11 +7,12 @@
 | Document | Role |
 |----------|------|
 | **PROJECT.md** (this file) | Product, requirements, architecture, data model, scope |
+| **MILESTONES.md** | Sequenced delivery plan with acceptance criteria |
 | `db/migrations/` | Executable schema (must stay in sync with §7) |
 | `docs/` | Supplementary deep-dives (must not contradict this file) |
 | `README.md` | Quick start and onboarding pointer |
 
-**Last updated:** 2026-08-18
+**Last updated:** 2026-08-18 (backend stack: Express.js / JavaScript)
 
 ---
 
@@ -31,6 +32,8 @@
 12. [Data Lifecycle](#12-data-lifecycle)
 13. [Open Decisions](#13-open-decisions)
 14. [Out of Scope](#14-out-of-scope)
+
+**Delivery plan:** [MILESTONES.md](MILESTONES.md)
 
 ---
 
@@ -396,8 +399,8 @@ erDiagram
 | Service | Port | Stack | Responsibility |
 |---------|------|-------|----------------|
 | `web` | 3000 | Next.js 15, React 19, TypeScript | UI |
-| `api` | 8080 | Go 1.22 | REST API, sessions, metadata |
-| `git-http` | 9418 | Go 1.22 | Git smart HTTP (clone, push, pull) |
+| `api` | 8080 | Node.js 20+, Express 4, JavaScript | REST API, sessions, metadata |
+| `git-http` | 9418 | Node.js 20+, Express 4, JavaScript | Git smart HTTP (clone, push, pull) |
 | `postgres` | 5432 | PostgreSQL 16 | Metadata |
 
 ### 8.2 Data Stores
@@ -438,6 +441,7 @@ flowchart LR
 | Repo identity | `(owner_id, name)` + stable `storage_path` | Rename-safe filesystem layout |
 | Soft delete | Users and repos | Recovery + audit |
 | Monorepo | 3 apps in one repo | Simpler MVP development |
+| Backend runtime | Node.js + Express (JavaScript) | Team preference; rich npm ecosystem |
 | Token format | `pat_<random>` | Clear prefix for identification |
 
 ---
@@ -508,42 +512,44 @@ https://{host}:9418/{owner}/{repo}.git
 ```
 Deluxe/
 ├── PROJECT.md              ← this file (source of truth)
+├── MILESTONES.md           ← delivery plan
 ├── README.md               ← quick start
+├── package.json            ← npm workspaces root
 ├── apps/
-│   ├── api/                ← REST API
-│   ├── git-http/           ← Git smart HTTP
+│   ├── api/                ← REST API (Express.js)
+│   ├── git-http/           ← Git smart HTTP (Express.js)
 │   └── web/                ← Next.js frontend
 ├── db/migrations/          ← PostgreSQL schema
 ├── docs/                   ← supplementary docs
 ├── scripts/                ← dev.sh, migrate.sh, init-repo.sh
 ├── storage/repos/          ← bare Git repos (gitignored)
 ├── docker-compose.yml
-├── go.work
 ├── Makefile
 └── .env.example
 ```
 
-### `apps/api` internal packages
+### `apps/api` modules
 
-| Package | Responsibility |
-|---------|----------------|
-| `auth` | Sessions, JWT, PAT, password hashing |
-| `config` | Environment configuration |
-| `db` | PostgreSQL connection |
-| `handler` | HTTP handlers |
-| `middleware` | Auth, CORS, logging |
-| `model` | Domain types |
-| `repository` | Data access layer |
-| `service` | Business logic |
-| `gitstore` | Read-only Git filesystem access |
+| Module (`src/`) | Responsibility |
+|-----------------|----------------|
+| `auth/` | Sessions, password hashing, PAT validation |
+| `config/` | Environment configuration |
+| `db/` | PostgreSQL connection pool |
+| `routes/` | Express route handlers |
+| `middleware/` | Auth, CORS, logging |
+| `models/` | Domain type definitions (JSDoc) |
+| `repositories/` | Data access layer |
+| `services/` | Business logic |
+| `gitstore/` | Read-only Git filesystem access |
 
-### `apps/git-http` internal packages
+### `apps/git-http` modules
 
-| Package | Responsibility |
-|---------|----------------|
-| `auth` | PAT validation + repo ACL |
-| `protocol` | upload-pack / receive-pack |
-| `hook` | Post-receive metadata sync |
+| Module (`src/`) | Responsibility |
+|-----------------|----------------|
+| `auth/` | PAT validation + repo ACL |
+| `protocol/` | upload-pack / receive-pack |
+| `hook/` | Post-receive metadata sync |
+| `db/` | PostgreSQL connection pool |
 
 ### `apps/web` routes
 
@@ -693,9 +699,12 @@ The following are **not** part of MVP. Do not implement unless this document is 
 
 ```bash
 cp .env.example .env
+npm install
 docker compose up -d postgres
 make migrate
-make dev
+npm run dev:api       # terminal 1
+npm run dev:git-http  # terminal 2
+npm run dev:web       # terminal 3
 ```
 
 | Service | URL |

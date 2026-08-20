@@ -8,12 +8,12 @@ Deluxe is a multi-service application that provides Git-based code hosting with 
 
 ## Services
 
-| Service | Port | Responsibility |
-|---------|------|----------------|
-| **web** | 3000 | React/Next.js UI |
-| **api** | 8080 | REST API, sessions, metadata |
-| **git-http** | 9418 | Git smart HTTP protocol |
-| **postgres** | 5432 | Metadata persistence |
+| Service | Port | Stack | Responsibility |
+|---------|------|-------|----------------|
+| **web** | 3000 | Next.js, React, TypeScript | UI |
+| **api** | 8080 | Node.js, Express, JavaScript | REST API, sessions, metadata |
+| **git-http** | 9418 | Node.js, Express, JavaScript | Git smart HTTP protocol |
+| **postgres** | 5432 | PostgreSQL 16 | Metadata persistence |
 
 ## Data Stores
 
@@ -44,7 +44,7 @@ Browser → web → api GET /repos/:owner/:name/blob?path=...&ref=main
 ```
 git CLI → git-http POST /:owner/:repo.git/git-receive-pack
         → auth middleware (PAT + repo_write scope)
-        → git receive-pack subprocess or go-git
+        → git receive-pack subprocess (child_process)
         → post-receive hook updates DB
 ```
 

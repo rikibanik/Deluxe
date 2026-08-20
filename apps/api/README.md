@@ -1,24 +1,41 @@
 # REST API
 
-Authentication, authorization, and repository metadata service.
+Express.js service for authentication, authorization, and repository metadata.
+
+## Stack
+
+- Node.js 20+
+- Express 4
+- PostgreSQL (`pg`)
 
 ## Layout
 
 ```
-internal/
-├── auth/         # Sessions, JWT, PAT, password hashing
-├── config/       # Environment configuration
-├── db/           # PostgreSQL connection
-├── gitstore/     # Read-only Git filesystem access
-├── handler/      # HTTP handlers
-├── middleware/   # Auth, CORS, logging
-├── model/        # Domain types
-├── repository/   # Data access layer
-└── service/      # Business logic
+src/
+├── auth/           # Sessions, password hashing, PAT validation
+├── config/         # Environment configuration
+├── db/             # PostgreSQL connection pool
+├── gitstore/       # Read-only Git filesystem access
+├── middleware/     # Auth, CORS, logging
+├── models/         # JSDoc type definitions
+├── repositories/   # Data access layer
+├── routes/         # Express route handlers
+├── services/       # Business logic
+└── index.js        # Entry point
 ```
 
 ## Run locally
 
 ```bash
-go run ./cmd/server
+# from repo root
+npm install
+npm run dev:api
+```
+
+## Run standalone
+
+```bash
+cd apps/api
+npm install
+npm run dev
 ```
