@@ -1,6 +1,6 @@
 # Web Frontend
 
-Next.js App Router UI for authentication, repository browsing, and code viewing.
+Next.js App Router UI (JavaScript) for authentication, repository browsing, and code viewing.
 
 ## Routes
 

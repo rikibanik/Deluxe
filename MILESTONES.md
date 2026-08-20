@@ -4,7 +4,7 @@
 > This file breaks the entire project into sequenced milestones with deliverables and acceptance criteria.
 > When scope changes, update PROJECT.md first, then adjust milestones here.
 
-**Last updated:** 2026-08-18 (backend stack: Express.js / JavaScript)
+**Last updated:** 2026-08-18 (full JavaScript stack — no Go)
 
 ---
 
@@ -113,7 +113,7 @@ Infrastructure only — enables all subsequent milestones.
 
 | # | Item | Package / file |
 |---|------|----------------|
-| 1.1 | PostgreSQL connection pool | `internal/db/` |
+| 1.1 | PostgreSQL connection pool | `src/db/postgres.js` |
 | 1.2 | User repository (CRUD) | `src/repositories/userRepository.js` |
 | 1.3 | Session repository | `src/repositories/sessionRepository.js` |
 | 1.4 | Password hashing (bcrypt) | `src/auth/password.js` |
@@ -128,14 +128,18 @@ Infrastructure only — enables all subsequent milestones.
 
 ### Acceptance Criteria
 
-- [ ] Register with username, email, password → user created with `status=active`
-- [ ] Duplicate username or email → 409
-- [ ] Login with valid credentials → session cookie set (HTTP-only, Secure in prod)
-- [ ] Login with invalid credentials → 401, generic error message
-- [ ] `GET /users/me` with valid session → user profile returned
-- [ ] `GET /users/me` without session → 401
-- [ ] Logout revokes session; subsequent requests → 401
-- [ ] Password stored as hash only (NFR-01)
+- [x] Register with username, email, password → user created with `status=active`
+- [x] Duplicate username or email → 409
+- [x] Login with valid credentials → session cookie set (HTTP-only, Secure in prod)
+- [x] Login with invalid credentials → 401, generic error message
+- [x] `GET /users/me` with valid session → user profile returned
+- [x] `GET /users/me` without session → 401
+- [x] Logout revokes session; subsequent requests → 401
+- [x] Password stored as hash only (NFR-01)
+
+### Status
+
+**Done**
 
 ### Requirements Mapped
 
@@ -340,12 +344,12 @@ All read endpoints testable via API against a repo with pushed content.
 | 6.1 | App layout (header, nav, auth guard) | `src/components/layout/` |
 | 6.2 | Register page + form validation | `src/app/register/` |
 | 6.3 | Login page | `src/app/login/` |
-| 6.4 | Logout action | `src/lib/auth.ts` |
-| 6.5 | API client with credentials | `src/lib/api.ts` |
-| 6.6 | Dashboard — repo list | `src/app/page.tsx` |
-| 6.7 | Create repo modal/form | `src/components/repo/CreateRepoForm.tsx` |
-| 6.8 | PAT settings page | `src/app/settings/tokens/` |
-| 6.9 | Create / revoke PAT UI | `src/components/auth/TokenManager.tsx` |
+| 6.4 | Logout action | `src/lib/auth.js` |
+| 6.5 | API client with credentials | `src/lib/api.js` |
+| 6.6 | Dashboard — repo list | `src/app/page.jsx` |
+| 6.7 | Create repo modal/form | `src/components/repo/CreateRepoForm.jsx` |
+| 6.8 | PAT settings page | `src/app/settings/tokens/page.jsx` |
+| 6.9 | Create / revoke PAT UI | `src/components/auth/TokenManager.jsx` |
 | 6.10 | Error and loading states | `src/components/ui/` |
 
 ### Acceptance Criteria
@@ -379,18 +383,18 @@ Full account and repo setup achievable without touching the API directly.
 
 | # | Item | Location |
 |---|------|----------|
-| 7.1 | Repo layout (header, tabs: Code, Commits) | `src/components/repo/RepoHeader.tsx` |
-| 7.2 | File tree component | `src/components/repo/FileTree.tsx` |
-| 7.3 | File viewer with syntax highlighting | `src/components/repo/FileViewer.tsx` |
-| 7.4 | README markdown renderer | `src/components/repo/Readme.tsx` |
-| 7.5 | Commit list component | `src/components/repo/CommitList.tsx` |
-| 7.6 | Branch selector | `src/components/repo/BranchSelector.tsx` |
-| 7.7 | Clone URL + PAT setup instructions | `src/components/repo/ClonePanel.tsx` |
-| 7.8 | Empty repo state (push instructions) | `src/components/repo/EmptyRepo.tsx` |
-| 7.9 | Repo home page (`/:owner/:repo`) | `src/app/[owner]/[repo]/page.tsx` |
+| 7.1 | Repo layout (header, tabs: Code, Commits) | `src/components/repo/RepoHeader.jsx` |
+| 7.2 | File tree component | `src/components/repo/FileTree.jsx` |
+| 7.3 | File viewer with syntax highlighting | `src/components/repo/FileViewer.jsx` |
+| 7.4 | README markdown renderer | `src/components/repo/Readme.jsx` |
+| 7.5 | Commit list component | `src/components/repo/CommitList.jsx` |
+| 7.6 | Branch selector | `src/components/repo/BranchSelector.jsx` |
+| 7.7 | Clone URL + PAT setup instructions | `src/components/repo/ClonePanel.jsx` |
+| 7.8 | Empty repo state (push instructions) | `src/components/repo/EmptyRepo.jsx` |
+| 7.9 | Repo home page (`/:owner/:repo`) | `src/app/[owner]/[repo]/page.jsx` |
 | 7.10 | Tree route (`/:owner/:repo/tree/*`) | `src/app/[owner]/[repo]/tree/` |
-| 7.11 | Commits route | `src/app/[owner]/[repo]/commits/` |
-| 7.12 | Large file / binary file handling in UI | `src/components/repo/FileViewer.tsx` |
+| 7.11 | Commits route | `src/app/[owner]/[repo]/commits/page.jsx` |
+| 7.12 | Large file / binary file handling in UI | `src/components/repo/FileViewer.jsx` |
 
 ### Acceptance Criteria
 

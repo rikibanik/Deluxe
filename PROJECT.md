@@ -12,9 +12,25 @@
 | `docs/` | Supplementary deep-dives (must not contradict this file) |
 | `README.md` | Quick start and onboarding pointer |
 
-**Last updated:** 2026-08-18 (backend stack: Express.js / JavaScript)
+**Last updated:** 2026-08-18 (full JavaScript stack — no Go)
 
 ---
+
+## Technology Stack Policy
+
+> **All application code is JavaScript on Node.js. Go is not used and must not be introduced.**
+
+| App | Runtime | Framework | Language |
+|-----|---------|-----------|----------|
+| `apps/api` | Node.js 20+ | Express 4 | JavaScript (ES modules) |
+| `apps/git-http` | Node.js 20+ | Express 4 | JavaScript (ES modules) |
+| `apps/web` | Node.js 20+ | Next.js 15, React 19 | JavaScript (JSX) |
+
+**Git protocol:** Implemented by shelling out to the system `git` CLI (`upload-pack` / `receive-pack`) via Node `child_process` — not via Go libraries such as `go-git`.
+
+**Database:** PostgreSQL only (schema in `db/migrations/`).
+
+**Do not add:** `go.mod`, `.go` files, `go.work`, or Go-based Git libraries.
 
 ## Table of Contents
 
@@ -398,7 +414,7 @@ erDiagram
 
 | Service | Port | Stack | Responsibility |
 |---------|------|-------|----------------|
-| `web` | 3000 | Next.js 15, React 19, TypeScript | UI |
+| `web` | 3000 | Next.js 15, React 19, JavaScript | UI |
 | `api` | 8080 | Node.js 20+, Express 4, JavaScript | REST API, sessions, metadata |
 | `git-http` | 9418 | Node.js 20+, Express 4, JavaScript | Git smart HTTP (clone, push, pull) |
 | `postgres` | 5432 | PostgreSQL 16 | Metadata |
@@ -441,7 +457,8 @@ flowchart LR
 | Repo identity | `(owner_id, name)` + stable `storage_path` | Rename-safe filesystem layout |
 | Soft delete | Users and repos | Recovery + audit |
 | Monorepo | 3 apps in one repo | Simpler MVP development |
-| Backend runtime | Node.js + Express (JavaScript) | Team preference; rich npm ecosystem |
+| Backend runtime | Node.js + Express (JavaScript) | Team standard; full JS monorepo |
+| Git integration | System `git` CLI via `child_process` | No Go; battle-tested Git binary |
 | Token format | `pat_<random>` | Clear prefix for identification |
 
 ---
@@ -518,7 +535,7 @@ Deluxe/
 ├── apps/
 │   ├── api/                ← REST API (Express.js)
 │   ├── git-http/           ← Git smart HTTP (Express.js)
-│   └── web/                ← Next.js frontend
+│   └── web/                ← Next.js frontend (JavaScript)
 ├── db/migrations/          ← PostgreSQL schema
 ├── docs/                   ← supplementary docs
 ├── scripts/                ← dev.sh, migrate.sh, init-repo.sh
@@ -562,6 +579,8 @@ Deluxe/
 | `/:owner/:repo` | Repo home (README) |
 | `/:owner/:repo/tree/*` | File browser |
 | `/:owner/:repo/commits` | Commit history |
+
+Web source files use `.jsx` for pages and `.js` for utilities.
 
 ---
 
